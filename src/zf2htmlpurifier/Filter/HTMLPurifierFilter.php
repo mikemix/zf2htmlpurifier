@@ -6,8 +6,8 @@ use HTMLPurifier;
 
 final class HTMLPurifierFilter implements FilterInterface
 {
-	/** @var HTMLPurifier */
-	private $htmlPurifier;
+    /** @var HTMLPurifier */
+    private $htmlPurifier;
 
     /**
      * Returns the result of filtering $value
@@ -18,19 +18,19 @@ final class HTMLPurifierFilter implements FilterInterface
      */
     public function filter($value)
     {
-		$purifier = $this->getHTMLPurifier();
-		return $purifier->purify($value);
+        $purifier = $this->getHtmlPurifier();
+        return $purifier->purify($value);
     }
-	
-	/**
-	 * @return HTMLPurifier
-	 */
-	private function getHTMLPurifier()
-	{
-		if (! $this->htmlPurifier) {
-			$this->htmlPurifier = new HTMLPurifier();
-		}
-		
-		return $this->htmlPurifier;
-	}
+    
+    /**
+     * @return HTMLPurifier
+     */
+    private function getHtmlPurifier()
+    {
+        if (! $this->htmlPurifier) {
+            $this->htmlPurifier = new HTMLPurifier();
+        }
+        
+        return $this->htmlPurifier;
+    }
 }
