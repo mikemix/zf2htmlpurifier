@@ -1,12 +1,12 @@
 # zf2htmlpurifier
-HTML Purifier as ZF2 filter
+HTML Purifier as ZF2 filter. Protect yourself from XSS attacks with two simple steps.
 
-Installation
-------------
+Install
+-------
 
 Install with composer ```"mikemix/zf2htmlpurifier": "0.2"```
 
-Usage
------
+Use
+---
 
 Include in form field's filter chain ```zf2htmlpurifier\Filter\HTMLPurifierFilter```
