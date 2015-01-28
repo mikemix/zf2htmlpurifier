@@ -9,11 +9,11 @@ use HTMLPurifier_ConfigSchema;
 
 final class HTMLPurifierFilter extends AbstractFilter
 {
-	/** @var HTMLPurifier */
-	private $htmlPurifier;
+    /** @var HTMLPurifier */
+    private $htmlPurifier;
 
-	/** @var HTMLPurifier_ConfigSchema */
-	private $configSchema;
+    /** @var HTMLPurifier_ConfigSchema */
+    private $configSchema;
 
     /**
      * Returns the result of filtering $value
@@ -24,37 +24,45 @@ final class HTMLPurifierFilter extends AbstractFilter
      */
     public function filter($value)
     {
-		if (! extension_loaded('tidy')) {
-			throw new Exception\RuntimeException('Tidy extension not loaded');
-		}
+        if (! extension_loaded('tidy')) {
+            throw new Exception\RuntimeException('Tidy extension not loaded');
+        }
 
-		$purifier = $this->getHTMLPurifier();
-		return $purifier->purify($value);
+        $purifier = $this->getHTMLPurifier();
+        return $purifier->purify($value);
     }
-	
-	/**
-	 * @return HTMLPurifier
-	 */
-	private function getHTMLPurifier()
-	{
-		if (! $this->htmlPurifier) {
-			if ($this->configSchema) {
-				$config = new HTMLPurifier_Config($this->configSchema);
-			} else {
-				$config = null;
-			}
 
-			$this->htmlPurifier = new HTMLPurifier($config);
-		}
-		
-		return $this->htmlPurifier;
-	}
+    /**
+     * @return HTMLPurifier
+     */
+    private function getHTMLPurifier()
+    {
+        if (! $this->htmlPurifier) {
+            if ($this->configSchema) {
+                $config = new HTMLPurifier_Config($this->configSchema);
+            } else {
+                $config = null;
+            }
 
-	/**
-	 * @param HTMLPurifier_ConfigSchema $schema
-	 */
-	private function setConfigSchema($schema)
-	{
-		$this->configSchema = $schema;
-	}
+            $this->htmlPurifier = new HTMLPurifier($config);
+        }
+
+        return $this->htmlPurifier;
+    }
+
+    /**
+     * @param HTMLPurifier_ConfigSchema $schema
+     */
+    public function setConfigSchema($schema)
+    {
+        $this->configSchema = $schema;
+    }
+
+    /**
+     * @param HTMLPurifier $purifier
+     */
+    public function setHtmlPurifier($purifier)
+    {
+        $this->htmlPurifier = $purifier;
+    }
 }
