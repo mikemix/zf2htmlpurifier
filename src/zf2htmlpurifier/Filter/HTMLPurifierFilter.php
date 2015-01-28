@@ -24,10 +24,6 @@ final class HTMLPurifierFilter extends AbstractFilter
      */
     public function filter($value)
     {
-        if (! extension_loaded('tidy')) {
-            throw new Exception\RuntimeException('Tidy extension not loaded');
-        }
-
         $purifier = $this->getHTMLPurifier();
         return $purifier->purify($value);
     }
