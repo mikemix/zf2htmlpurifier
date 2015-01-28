@@ -1,13 +1,19 @@
 <?php
 namespace zf2htmlpurifier\Filter;
 
-use Zend\Filter\FilterInterface;
+use Zend\Filter\AbstractFilter;
+use Zend\Filter\Exception;
 use HTMLPurifier;
+use HTMLPurifier_Config;
+use HTMLPurifier_ConfigSchema;
 
-final class HTMLPurifierFilter implements FilterInterface
+final class HTMLPurifierFilter extends AbstractFilter
 {
-    /** @var HTMLPurifier */
-    private $htmlPurifier;
+	/** @var HTMLPurifier */
+	private $htmlPurifier;
+
+	/** @var HTMLPurifier_ConfigSchema */
+	private $configSchema;
 
     /**
      * Returns the result of filtering $value
@@ -18,19 +24,37 @@ final class HTMLPurifierFilter implements FilterInterface
      */
     public function filter($value)
     {
-        $purifier = $this->getHtmlPurifier();
-        return $purifier->purify($value);
+		if (! extension_loaded('tidy')) {
+			throw new Exception\RuntimeException('Tidy extension not loaded');
+		}
+
+		$purifier = $this->getHTMLPurifier();
+		return $purifier->purify($value);
     }
-    
-    /**
-     * @return HTMLPurifier
-     */
-    private function getHtmlPurifier()
-    {
-        if (! $this->htmlPurifier) {
-            $this->htmlPurifier = new HTMLPurifier();
-        }
-        
-        return $this->htmlPurifier;
-    }
+	
+	/**
+	 * @return HTMLPurifier
+	 */
+	private function getHTMLPurifier()
+	{
+		if (! $this->htmlPurifier) {
+			if ($this->configSchema) {
+				$config = new HTMLPurifier_Config($this->configSchema);
+			} else {
+				$config = null;
+			}
+
+			$this->htmlPurifier = new HTMLPurifier($config);
+		}
+		
+		return $this->htmlPurifier;
+	}
+
+	/**
+	 * @param HTMLPurifier_ConfigSchema $schema
+	 */
+	private function setConfigSchema($schema)
+	{
+		$this->configSchema = $schema;
+	}
 }
