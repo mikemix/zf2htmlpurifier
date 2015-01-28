@@ -4,7 +4,7 @@ HTML Purifier as ZF2 filter
 Installation
 ------------
 
-Install with composer ```"mikemix/zf2htmlpurifier": "0.1"```
+Install with composer ```"mikemix/zf2htmlpurifier": "0.2"```
 
 Usage
 -----
