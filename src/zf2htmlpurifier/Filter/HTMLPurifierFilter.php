@@ -18,14 +18,13 @@ final class HTMLPurifierFilter extends AbstractFilter
     /**
      * Returns the result of filtering $value
      *
-     * @param mixed $value
+     * @param string $value
      * @throws Exception\RuntimeException If filtering $value is impossible
-     * @return mixed
+     * @return string
      */
     public function filter($value)
     {
-        $purifier = $this->getHTMLPurifier();
-        return $purifier->purify($value);
+        return $this->getHTMLPurifier()->purify($value);
     }
 
     /**
@@ -33,23 +32,25 @@ final class HTMLPurifierFilter extends AbstractFilter
      */
     private function getHTMLPurifier()
     {
-        if (! $this->htmlPurifier) {
-            if ($this->configSchema) {
-                $config = new HTMLPurifier_Config($this->configSchema);
-            } else {
-                $config = null;
-            }
-
-            $this->htmlPurifier = new HTMLPurifier($config);
+        if ($this->htmlPurifier) {
+            return $this->htmlPurifier;
+        }
+        
+        if (! $this->configSchema) {
+            $config = HTMLPurifier_Config::createDefault();
+            $config->set('Cache.SerializerPath', sys_get_temp_dir());
+            
+            $this->configSchema = new HTMLPurifier_ConfigSchema($config);
         }
 
+        $this->htmlPurifier = new HTMLPurifier($this->configSchema);
         return $this->htmlPurifier;
     }
 
     /**
      * @param HTMLPurifier_ConfigSchema $schema
      */
-    public function setConfigSchema($schema)
+    public function setConfigSchema(HTMLPurifier_ConfigSchema $schema)
     {
         $this->configSchema = $schema;
     }
@@ -57,7 +58,7 @@ final class HTMLPurifierFilter extends AbstractFilter
     /**
      * @param HTMLPurifier $purifier
      */
-    public function setHtmlPurifier($purifier)
+    public function setHtmlPurifier(HTMLPurifier $purifier)
     {
         $this->htmlPurifier = $purifier;
     }
