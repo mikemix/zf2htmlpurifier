@@ -9,4 +9,20 @@ Install with composer ```"mikemix/zf2htmlpurifier": "0.*"```
 Use
 ---
 
-Include in form field's filter chain ```zf2htmlpurifier\Filter\HTMLPurifierFilter```
+Include in form field's filter chain ```zf2htmlpurifier\Filter\HTMLPurifierFilter```, for example:
+
+```php
+// SomeFormClass.php
+
+    public function getInputFilterSpecification()
+    {
+      return array(
+          // other elements
+          'someField' => array(
+              'filters' => array(
+                  array('name' => 'zf2htmlpurifier\Filter\HTMLPurifierFilter'),
+              ),
+          ),
+      );
+    }
+```
