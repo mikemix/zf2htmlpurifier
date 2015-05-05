@@ -4,6 +4,7 @@
   "description": "HTMLPurifier as ZF2 Filter",
   "keywords": ["zf2","html purifier","xss"],
   "homepage": "http://www.phpcontext.com",
+  "license": "MIT",
   "require": {
     "php": ">=5.3.0",
     "ezyang/htmlpurifier": "4.*",
