@@ -42,9 +42,9 @@ class ExampleForm extends Form
 
 // in controller (ugly code example without Dependency Injection)
 
-$fm = $this->getServiceLocator()->get('FormManager');
-$form = $fm->get(MyApp\Form\ExampleForm::class);
+$fm = $this->getServiceLocator()->get('FormElementManager');
 
+$form = $fm->get(MyApp\Form\ExampleForm::class);
 $form->setData(['field' => '<a href="#" onlick="javascript:alert(xss)">link</a>']);
 $form->isValid();
 
