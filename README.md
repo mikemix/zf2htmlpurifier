@@ -16,8 +16,9 @@ Include in form field's filter chain ```zf2htmlpurifier\Filter\HTMLPurifierFilte
 namespace MyApp\Form;
 
 use Zend\Form\Form;
+use Zend\InputFilter\InputFilterProviderInterface;
 
-class ExampleForm extends Form
+class ExampleForm extends Form implements InputFilterProviderInterface
 {
     public function init()
     {
