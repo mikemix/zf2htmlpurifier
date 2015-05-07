@@ -53,3 +53,14 @@ $form->isValid();
 echo $form->getData('field');
 
 ```
+
+Standalone usage
+----------------
+
+It can be used as standalone class as well:
+
+```php
+$purifier = new \zf2htmlpurifier\Filter\HTMLPurifierFilter();
+
+echo $purifier->filter('<a href="#" onlick="javascript:alert(xss)">link</a>');
+```
