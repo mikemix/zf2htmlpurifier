@@ -7,13 +7,13 @@ use HTMLPurifier;
 use HTMLPurifier_Config;
 use HTMLPurifier_ConfigSchema;
 
-final class HTMLPurifierFilter extends AbstractFilter
+class HTMLPurifierFilter extends AbstractFilter
 {
     /** @var HTMLPurifier */
-    private $htmlPurifier;
+    protected $htmlPurifier;
 
-    /** @var HTMLPurifier_ConfigSchema */
-    private $configSchema;
+    /** @var array */
+    protected $settings = [];
 
     /**
      * Returns the result of filtering $value
@@ -30,29 +30,30 @@ final class HTMLPurifierFilter extends AbstractFilter
     /**
      * @return HTMLPurifier
      */
-    private function getHTMLPurifier()
+    protected function getHTMLPurifier()
     {
         if ($this->htmlPurifier) {
             return $this->htmlPurifier;
         }
         
-        if (! $this->configSchema) {
-            $config = HTMLPurifier_Config::createDefault();
-            $config->set('Cache.SerializerPath', sys_get_temp_dir());
-            
-            $this->configSchema = new HTMLPurifier_ConfigSchema($config);
+        $config = HTMLPurifier_Config::createDefault();
+        $config->set('Cache.SerializerPath', sys_get_temp_dir());
+        
+        foreach ($this->settings as $key => $value) {
+            $config->set($key, $value);
         }
-
-        $this->htmlPurifier = new HTMLPurifier($this->configSchema);
+        
+        $this->htmlPurifier = new HTMLPurifier(new HTMLPurifier_ConfigSchema($config));
+        
         return $this->htmlPurifier;
     }
 
     /**
-     * @param HTMLPurifier_ConfigSchema $schema
+     * @param array $settings
      */
-    public function setConfigSchema(HTMLPurifier_ConfigSchema $schema)
+    public function setSettings(array $settings)
     {
-        $this->configSchema = $schema;
+        $this->settings = $settings;
     }
 
     /**

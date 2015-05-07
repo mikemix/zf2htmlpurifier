@@ -38,14 +38,4 @@ class HTMLPurifierFilterTest extends TestCase
     {
         $this->assertEquals('', $this->filter->filter(''));
     }
-    
-    public function testFilterWithConfigSchema()
-    {
-        $schema = $this->getMockBuilder(HTMLPurifier_ConfigSchema::class)
-            #->setMethods(['purify'])
-            ->getMock();
-            
-        $this->filter->setConfigSchema($schema);
-        $this->filter->filter('input');
-    }
 }
