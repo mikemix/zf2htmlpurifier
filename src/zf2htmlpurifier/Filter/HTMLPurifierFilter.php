@@ -13,7 +13,7 @@ class HTMLPurifierFilter extends AbstractFilter
     protected $htmlPurifier;
 
     /** @var array */
-    protected $settings = [];
+    protected $config = array();
 
     /**
      * Returns the result of filtering $value
@@ -24,36 +24,23 @@ class HTMLPurifierFilter extends AbstractFilter
      */
     public function filter($value)
     {
-        return $this->getHTMLPurifier()->purify($value);
+        return $this->getHtmlPurifier()->purify($value);
     }
 
     /**
      * @return HTMLPurifier
      */
-    protected function getHTMLPurifier()
+    public function getHtmlPurifier()
     {
-        if ($this->htmlPurifier) {
-            return $this->htmlPurifier;
-        }
-        
-        $config = HTMLPurifier_Config::createDefault();
-        $config->set('Cache.SerializerPath', sys_get_temp_dir());
-        
-        foreach ($this->settings as $key => $value) {
-            $config->set($key, $value);
-        }
-        
-        $this->htmlPurifier = new HTMLPurifier(new HTMLPurifier_ConfigSchema($config));
-        
-        return $this->htmlPurifier;
-    }
+        if (!$this->htmlPurifier) {
+            if (!isset($this->config['Cache.SerializerPath'])) {
+                $this->config['Cache.SerializerPath'] = sys_get_temp_dir();
+            }
 
-    /**
-     * @param array $settings
-     */
-    public function setSettings(array $settings)
-    {
-        $this->settings = $settings;
+            $this->htmlPurifier = new HTMLPurifier($this->config);
+        }
+
+        return $this->htmlPurifier;
     }
 
     /**
@@ -62,5 +49,21 @@ class HTMLPurifierFilter extends AbstractFilter
     public function setHtmlPurifier(HTMLPurifier $purifier)
     {
         $this->htmlPurifier = $purifier;
+    }
+
+    /**
+     * @param array $config
+     */
+    public function setConfig(array $config)
+    {
+        $this->config = $config;
+    }
+
+    /**
+     * @return array
+     */
+    public function getConfig()
+    {
+        return $this->config;
     }
 }
