@@ -8,13 +8,11 @@ php:
   - hhvm
 
 before_script:
-  - sh .travis.install.sh
+  - travis_retry composer self-update
+  - travis_retry composer install --no-interaction --prefer-source --dev
 
 script:
-  - ./vendor/bin/phpunit --disallow-test-output --report-useless-tests --coverage-clover ./clover.xml --group=Coverage ./test/
-  - ./vendor/bin/phpunit --disallow-test-output --report-useless-tests --strict --exclude-group=Performance,Coverage ./test/
-  - ./vendor/bin/phpcs --standard=PSR2 ./src/ ./test/
+  - phpunit --coverage-text --coverage-clover=coverage.clover
 
-matrix:
-  allow_failures:
-    - php: hhvm
+after_script:
+  - php vendor/bin/ocular code-coverage:upload --format=php-clover coverage.clover
