@@ -7,13 +7,13 @@ use HTMLPurifier;
 use HTMLPurifier_Config;
 use HTMLPurifier_ConfigSchema;
 
-final class HTMLPurifierFilter extends AbstractFilter
+class HTMLPurifierFilter extends AbstractFilter
 {
     /** @var HTMLPurifier */
-    private $htmlPurifier;
+    protected $htmlPurifier;
 
-    /** @var HTMLPurifier_ConfigSchema */
-    private $configSchema;
+    /** @var array */
+    protected $config = array();
 
     /**
      * Returns the result of filtering $value
@@ -24,35 +24,23 @@ final class HTMLPurifierFilter extends AbstractFilter
      */
     public function filter($value)
     {
-        return $this->getHTMLPurifier()->purify($value);
+        return $this->getHtmlPurifier()->purify($value);
     }
 
     /**
      * @return HTMLPurifier
      */
-    private function getHTMLPurifier()
+    public function getHtmlPurifier()
     {
-        if ($this->htmlPurifier) {
-            return $this->htmlPurifier;
-        }
-        
-        if (! $this->configSchema) {
-            $config = HTMLPurifier_Config::createDefault();
-            $config->set('Cache.SerializerPath', sys_get_temp_dir());
-            
-            $this->configSchema = new HTMLPurifier_ConfigSchema($config);
+        if (!$this->htmlPurifier) {
+            if (!isset($this->config['Cache.SerializerPath'])) {
+                $this->config['Cache.SerializerPath'] = sys_get_temp_dir();
+            }
+
+            $this->htmlPurifier = new HTMLPurifier($this->config);
         }
 
-        $this->htmlPurifier = new HTMLPurifier($this->configSchema);
         return $this->htmlPurifier;
-    }
-
-    /**
-     * @param HTMLPurifier_ConfigSchema $schema
-     */
-    public function setConfigSchema(HTMLPurifier_ConfigSchema $schema)
-    {
-        $this->configSchema = $schema;
     }
 
     /**
@@ -61,5 +49,21 @@ final class HTMLPurifierFilter extends AbstractFilter
     public function setHtmlPurifier(HTMLPurifier $purifier)
     {
         $this->htmlPurifier = $purifier;
+    }
+
+    /**
+     * @param array $config
+     */
+    public function setConfig(array $config)
+    {
+        $this->config = $config;
+    }
+
+    /**
+     * @return array
+     */
+    public function getConfig()
+    {
+        return $this->config;
     }
 }

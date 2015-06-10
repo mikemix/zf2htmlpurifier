@@ -4,7 +4,7 @@ HTML Purifier as ZF2 filter. Protect yourself from XSS attacks with two simple s
 Install
 -------
 
-Install with composer ```"mikemix/zf2htmlpurifier": "~0.5"```
+Install with composer ```"mikemix/zf2htmlpurifier": "~1.0"```
 
 Use
 ---
@@ -36,8 +36,23 @@ class ExampleForm extends Form implements InputFilterProviderInterface
                 'filters' => array(
                     array('name' => 'zf2htmlpurifier\Filter\HTMLPurifierFilter'),
                 ),
-          ),
-      );
+            ),
+        );
+    }
+
+    // or with modern php
+
+    public function getInputFilterSpecification()
+    {
+        return [
+            // other elements
+            'field' => [
+                'required' => true,
+                'filters' => [
+                    ['name' => zf2htmlpurifier\Filter\HTMLPurifierFilter::class],
+                ],
+            ],
+        ];
     }
 }
 
@@ -54,6 +69,33 @@ echo $form->getData('field');
 
 ```
 
+Fine tuning HTMLPurifier
+------------------------
+
+You can pass options to configure the HTMLPurifier library.
+
+```php
+
+// the form
+
+    public function getInputFilterSpecification()
+    {
+        return [
+            // other elements
+            'field' => [
+                'required' => true,
+                'filters' => [
+                    ['name' => zf2htmlpurifier\Filter\HTMLPurifierFilter::class, 'options' => ['config' => [
+                        'Cache.SerializerPath' => '/other/path',
+                        'Some.Setting' => 'Setting value',
+                    ]]],
+                ],
+            ],
+        ];
+    }
+
+```
+
 Standalone usage
 ----------------
 
@@ -64,3 +106,8 @@ $purifier = new \zf2htmlpurifier\Filter\HTMLPurifierFilter();
 
 echo $purifier->filter('<a href="#" onlick="javascript:alert(xss)">link</a>');
 ```
+
+TODO
+----
+
+   * Convert this to Module and allow defining default HTMLPurifier config via the configuration files

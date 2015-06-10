@@ -10,10 +10,7 @@ class HTMLPurifierFilterTest extends TestCase
 {
     /** @var HTMLPurifierFilter */
     private $filter;
-    
-    /** @var HTMLPurifier */
-    private $purifier;
-    
+
     public function setUp()
     {
         $this->filter = new HTMLPurifierFilter();
@@ -21,31 +18,32 @@ class HTMLPurifierFilterTest extends TestCase
     
     public function testFilter()
     {
-        $purifier = $this->getMockBuilder(HTMLPurifier::class)
-            ->setMethods(['purify'])
-            ->getMock();
-            
+        $purifier = $this->getMock(HTMLPurifier::class, array('purify'));
         $purifier->expects($this->once())
             ->method('purify')
             ->with($this->equalTo('input'))
             ->will($this->returnValue('output'));
-            
+
         $this->filter->setHtmlPurifier($purifier);
-        $this->filter->filter('input');
+
+        $this->assertEquals('output', $this->filter->filter('input'));
     }
-    
-    public function testFilterWithoutConfigSchema()
+
+    public function testCacheSerializerPathSetWhenNotProvidedWithConfig()
     {
-        $this->assertEquals('', $this->filter->filter(''));
+        $purifier = $this->filter->getHtmlPurifier();
+
+        $this->assertEquals(sys_get_temp_dir(), $purifier->config->get('Cache.SerializerPath'));
     }
-    
-    public function testFilterWithConfigSchema()
+
+    public function testSetConfig()
     {
-        $schema = $this->getMockBuilder(HTMLPurifier_ConfigSchema::class)
-            #->setMethods(['purify'])
-            ->getMock();
-            
-        $this->filter->setConfigSchema($schema);
-        $this->filter->filter('input');
+        $this->filter->setConfig(array(
+            'Cache.SerializerPath' => '/dev/null',
+        ));
+
+        $purifier = $this->filter->getHtmlPurifier();
+
+        $this->assertEquals('/dev/null', $purifier->config->get('Cache.SerializerPath'));
     }
 }
