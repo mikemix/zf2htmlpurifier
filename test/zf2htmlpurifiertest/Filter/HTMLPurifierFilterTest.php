@@ -18,7 +18,7 @@ class HTMLPurifierFilterTest extends TestCase
     
     public function testFilter()
     {
-        $purifier = $this->getMock(HTMLPurifier::class, array('purify'));
+        $purifier = $this->getMock('HTMLPurifier', array('purify'));
         $purifier->expects($this->once())
             ->method('purify')
             ->with($this->equalTo('input'))
