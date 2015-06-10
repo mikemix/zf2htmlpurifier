@@ -46,4 +46,15 @@ class HTMLPurifierFilterTest extends TestCase
 
         $this->assertEquals('/dev/null', $purifier->config->get('Cache.SerializerPath'));
     }
+
+    public function testGetConfig()
+    {
+        $expected = array(
+            'Cache.SerializerPath' => '/dev/null',
+        );
+
+        $this->filter->setConfig($expected);
+
+        $this->assertEquals($expected, $this->filter->getConfig());
+    }
 }
