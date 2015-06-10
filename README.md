@@ -1,4 +1,6 @@
 # zf2htmlpurifier
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/mikemix/zf2htmlpurifier/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/mikemix/zf2htmlpurifier/?branch=master) [![Code Coverage](https://scrutinizer-ci.com/g/mikemix/zf2htmlpurifier/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/mikemix/zf2htmlpurifier/?branch=master) [![Build Status](https://scrutinizer-ci.com/g/mikemix/zf2htmlpurifier/badges/build.png?b=master)](https://scrutinizer-ci.com/g/mikemix/zf2htmlpurifier/build-status/master)
+
 HTML Purifier as ZF2 filter. Protect yourself from XSS attacks with two simple steps.
 
 Install
