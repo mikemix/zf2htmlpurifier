@@ -1,0 +1,20 @@
+language: php
+
+php:
+  - 5.3
+  - 5.4
+  - 5.5
+  - 5.6
+  - hhvm
+
+before_script:
+  - sh .travis.install.sh
+
+script:
+  - ./vendor/bin/phpunit --disallow-test-output --report-useless-tests --coverage-clover ./clover.xml --group=Coverage ./test/
+  - ./vendor/bin/phpunit --disallow-test-output --report-useless-tests --strict --exclude-group=Performance,Coverage ./test/
+  - ./vendor/bin/phpcs --standard=PSR2 ./src/ ./test/
+
+matrix:
+  allow_failures:
+    - php: hhvm
